@@ -121,11 +121,11 @@ const UpdateArtistStatus = async (req, res) => {
 const UpdateArtistFields = async (req, res) => {
   const artist = await Artist.findById(req.params.id);
   const oldImageUrl = decodeURIComponent(
-    artist.file.split("amazonaws.com/")[1]
+    artist.file.split(".cloudfront.net/")[1]
   );
 
   if (req.file) {
-    artist.file = req.file.location;
+    artist.file = `${cloudfronturl}/${req.file.location.split(".amazonaws.com/")[1]}`;
     const params = {
       Bucket: process.env.AWS_BUCKET_NAME,
       Key: oldImageUrl,

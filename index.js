@@ -6,6 +6,7 @@ const auth = require("./routes/auth");
 const artist = require("./routes/Admin/Artist");
 const album = require("./routes/Admin/Album");
 const app = express();
+const resetpassword=require("./routes/resetpassword")
 
 app.use(express.json());
 connectdb();
@@ -22,6 +23,9 @@ app.use(
     credentials: true,
   })
 );
+
+//common for both
+app.use("/reset",resetpassword);
 
 //routes for users
 app.use("/user", auth);
