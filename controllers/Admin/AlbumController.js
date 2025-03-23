@@ -89,7 +89,7 @@ const DeleteAlbum = async (req, res) => {
     const deleteAlbumFromAWSBucket = new DeleteObjectCommand(params);
     await s3.send(deleteAlbumFromAWSBucket);
 
-    res.status(200).send({ message: "Album deleted successfully" });
+    res.status(200).send({ message: "Album deleted successfully",status:200 });
   } catch (err) {
     return res.status(500).json({ error: err });
   }
