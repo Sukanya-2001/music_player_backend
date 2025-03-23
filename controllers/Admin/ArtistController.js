@@ -79,7 +79,7 @@ const DeleteArtist = async (req, res) => {
     );
 
     const params = {
-      Bucket: "mediaplayer020501",
+      Bucket: process.env.AWS_BUCKET_NAME,
       Key: decodeURIComponent(req.body.imageKey.split("amazonaws.com/")[1]),
     };
 
@@ -133,7 +133,7 @@ const UpdateArtistFields = async (req, res) => {
   await artist.save();
 
   const params = {
-    Bucket: "mediaplayer020501",
+    Bucket: process.env.AWS_BUCKET_NAME,
     Key: oldImageUrl,
   };
   const deleteAwsObjectFromBucket = new DeleteObjectCommand(params);
