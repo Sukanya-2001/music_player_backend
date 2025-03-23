@@ -1,10 +1,10 @@
 const { DeleteObjectCommand } = require("@aws-sdk/client-s3");
-const Artist = require("../../schema/artistCreation.schema");
 const s3 = require("../../config/s3Bucket");
+const Album = require("../../schema/albumCreation.schema");
 
 require("dotenv").config();
 
-const ArtistCreation = async (req, res) => {
+const AlbumCreation = async (req, res) => {
   try {
     console.log(req.body);
 
@@ -12,17 +12,17 @@ const ArtistCreation = async (req, res) => {
       return res.status(400).json({ message: "No file uploaded" });
     }
 
-    const newArtist = new Artist({
+    const newAlbum = new Album({
       title: req.body.title,
       description: req.body.description,
       file: req.file.location,
     });
 
-    const ArtistDB = await newArtist.save();
+    const AlbumDB = await newAlbum.save();
 
     return res.status(200).json({
-      ArtistDB,
-      message: "Artist created successfully!!",
+      AlbumDB,
+      message: "Album created successfully!!",
       status: 201,
     });
   } catch (err) {
@@ -30,7 +30,7 @@ const ArtistCreation = async (req, res) => {
   }
 };
 
-const getArtists = async (req, res) => {
+const getAlbums = async (req, res) => {
   try {
     const page = parseInt(req.query.page);
     const limit = parseInt(req.query.limit);
@@ -44,18 +44,18 @@ const getArtists = async (req, res) => {
       };
     }
 
-    const total = await Artist.countDocuments(query); //25
+    const total = await Album.countDocuments(query); //25
     const totalPage = Math.ceil(total / limit); // 2.5==>3
 
-    const artists = await Artist.find(query)
+    const albums = await Album.find(query)
       .skip((page - 1) * limit)
       .limit(limit)
       .sort({ createdAt: -1 });
 
     return res.status(200).json({
-      artists: artists,
+      albums: albums,
       totalPage: totalPage,
-      totalArtist: total,
+      totalAlbums: total,
       page: page,
       limit: limit,
       status: 200,
@@ -65,11 +65,11 @@ const getArtists = async (req, res) => {
   }
 };
 
-const DeleteArtist = async (req, res) => {
+const DeleteAlbum = async (req, res) => {
   try {
-    const artist = await Artist.deleteOne({ _id: req.params.id });
+    const album = await Album.deleteOne({ _id: req.params.id });
 
-    console.log(artist, req.params.id);
+    console.log(album, req.params.id);
 
     // "https://mediaplayer020501.s3.eu-north-1.amazonaws.com/uploads/1742669273622_Screenshot%202024-01-01%20185117.png"
 
@@ -82,31 +82,31 @@ const DeleteArtist = async (req, res) => {
       Key: decodeURIComponent(req.body.imageKey.split("amazonaws.com/")[1]),
     };
 
-    const deleteArtistFromAWSBucket = new DeleteObjectCommand(params);
-    await s3.send(deleteArtistFromAWSBucket);
+    const deleteAlbumFromAWSBucket = new DeleteObjectCommand(params);
+    await s3.send(deleteAlbumFromAWSBucket);
 
-    res.status(200).send({ message: "Artist deleted successfully" });
+    res.status(200).send({ message: "Album deleted successfully" });
   } catch (err) {
     return res.status(500).json({ error: err });
   }
 };
 
-const getArtistInfo = async (req, res) => {
-  const artist = await Artist.findById(req.params.id).select("-__v");
+const getAlbumInfo = async (req, res) => {
+  const album = await Album.findById(req.params.id).select("-__v");
 
-  res.status(200).json({ artist, status: 200 });
+  res.status(200).json({ album, status: 200 });
 };
 
-const UpdateArtistStatus = async (req, res) => {
-  const artist = await Artist.findById(req.params.id).select("-__v");
+const UpdateAlbumStatus = async (req, res) => {
+  const album = await Album.findById(req.params.id).select("-__v");
 
-  if (artist.status === "active") {
-    artist.status = "inactive";
+  if (album.status === "active") {
+    album.status = "inactive";
   } else {
-    artist.status = "active";
+    album.status = "active";
   }
 
-  const updatedStatus = await artist.save();
+  const updatedStatus = await album.save();
 
   res.status(200).json({
     updatedStatus,
@@ -115,14 +115,12 @@ const UpdateArtistStatus = async (req, res) => {
   });
 };
 
-const UpdateArtistFields = async (req, res) => {
-  const artist = await Artist.findById(req.params.id);
-  const oldImageUrl = decodeURIComponent(
-    artist.file.split("amazonaws.com/")[1]
-  );
+const UpdateAlbumFields = async (req, res) => {
+  const album = await Album.findById(req.params.id);
+  const oldImageUrl = decodeURIComponent(album.file.split("amazonaws.com/")[1]);
 
   if (req.file) {
-    artist.file = req.file.location;
+    album.file = req.file.location;
     const params = {
       Bucket: process.env.AWS_BUCKET_NAME,
       Key: oldImageUrl,
@@ -130,23 +128,23 @@ const UpdateArtistFields = async (req, res) => {
     const deleteAwsObjectFromBucket = new DeleteObjectCommand(params);
     await s3.send(deleteAwsObjectFromBucket);
   } else {
-    artist.file = artist.file;
+    album.file = album.file;
   }
 
-  if (artist) {
-    (artist.title = req.body.title),
-      (artist.description = req.body.description);
+  if (album) {
+    (album.title = req.body.title), (album.description = req.body.description);
   }
 
-  await artist.save();
-  res.status(200).json({ message: "Artist updated successfully", status: 200 });
+  await album.save();
+
+  res.status(200).json({ message: "Album updated successfully", status: 200 });
 };
 
 module.exports = {
-  ArtistCreation,
-  getArtists,
-  DeleteArtist,
-  getArtistInfo,
-  UpdateArtistStatus,
-  UpdateArtistFields,
+  AlbumCreation,
+  getAlbums,
+  DeleteAlbum,
+  getAlbumInfo,
+  UpdateAlbumStatus,
+  UpdateAlbumFields,
 };
