@@ -3,19 +3,23 @@ const s3 = require("../../config/s3Bucket");
 const Album = require("../../schema/albumCreation.schema");
 
 require("dotenv").config();
+const cloudfronturl = "https://d30454c5f9k748.cloudfront.net";
 
 const AlbumCreation = async (req, res) => {
   try {
-    console.log(req.body);
-
+ 
     if (!req.file) {
       return res.status(400).json({ message: "No file uploaded" });
     }
 
+    const publicurl = `${cloudfronturl}/${
+      req.file.location.split(".amazonaws.com/")[1]
+    }`;
+
     const newAlbum = new Album({
       title: req.body.title,
       description: req.body.description,
-      file: req.file.location,
+      file: publicurl,
     });
 
     const AlbumDB = await newAlbum.save();

@@ -3,6 +3,7 @@ const Artist = require("../../schema/artistCreation.schema");
 const s3 = require("../../config/s3Bucket");
 
 require("dotenv").config();
+const cloudfronturl="https://d30454c5f9k748.cloudfront.net"
 
 const ArtistCreation = async (req, res) => {
   try {
@@ -12,10 +13,12 @@ const ArtistCreation = async (req, res) => {
       return res.status(400).json({ message: "No file uploaded" });
     }
 
+    const publicurl=`${cloudfronturl}/${req.file.location.split(".amazonaws.com/")[1]}`;
+
     const newArtist = new Artist({
       title: req.body.title,
       description: req.body.description,
-      file: req.file.location,
+      file: publicurl,
     });
 
     const ArtistDB = await newArtist.save();
