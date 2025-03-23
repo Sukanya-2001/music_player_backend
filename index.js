@@ -14,8 +14,8 @@ connectdb();
 app.use(
   cors({
     origin: [
-      "https://musicplayer-admin-lilac.vercel.app/",
-      "https://musicplayer-frontend.vercel.app/",
+      "https://musicplayer-admin-lilac.vercel.app",
+      "https://musicplayer-frontend.vercel.app",
       "http://localhost:3000",
       "http://localhost:14016",
     ],
