@@ -1,0 +1,39 @@
+const express = require("express");
+const cors = require("cors");
+const connectdb = require("./connection/connectdb");
+const redisClient = require("./connection/redisdb");
+const auth = require("./routes/auth");
+const artist = require("./routes/Admin/Artist");
+const app = express();
+
+app.use(express.json());
+connectdb();
+
+app.use(
+  cors({
+    origin: [
+      "https://musicplayer-admin-lilac.vercel.app/",
+      "https://musicplayer-frontend.vercel.app/",
+      "http://localhost:3000",
+      "http://localhost:14016",
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
+
+//routes for users
+app.use("/user", auth);
+
+//routes for admin
+
+//artist
+app.use("/admin/artist",artist);
+
+app.get("/", (req, res) => {
+  res.send("working...");
+});
+
+app.listen(3001, () => {
+  console.log(`app is listening on 3001`);
+});
