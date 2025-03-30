@@ -5,6 +5,7 @@ const redisClient = require("./connection/redisdb");
 const auth = require("./routes/auth");
 const artist = require("./routes/Admin/Artist");
 const album = require("./routes/Admin/Album");
+const song = require("./routes/Admin/Song");
 const app = express();
 const resetpassword=require("./routes/resetpassword")
 
@@ -36,7 +37,10 @@ app.use("/user", auth);
 app.use("/admin/artist",artist);
 
 //album
-app.use("/admin/album", album)
+app.use("/admin/album", album);
+
+//song
+app.use("/admin/song",song);
 
 app.get("/", (req, res) => {
   res.send("working...");
