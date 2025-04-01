@@ -6,6 +6,7 @@ const auth = require("./routes/auth");
 const artist = require("./routes/Admin/Artist");
 const album = require("./routes/Admin/Album");
 const song = require("./routes/Admin/Song");
+const home = require("./routes/User/Home");
 const app = express();
 const resetpassword=require("./routes/resetpassword")
 
@@ -41,6 +42,10 @@ app.use("/admin/album", album);
 
 //song
 app.use("/admin/song",song);
+
+//homepage
+
+app.use("/user/home",home);
 
 app.get("/", (req, res) => {
   res.send("working...");
