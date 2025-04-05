@@ -81,7 +81,7 @@ const getAllDetails = async (req, res) => {
       return res.status(200).json({
         data: newReleases,
         totalPage: totalPage,
-        totalReleaseSongs: total,
+        totalSongs: total,
         page: page,
         limit: limit,
         status: 200,
@@ -102,7 +102,7 @@ const getAllDetails = async (req, res) => {
         return res.status(200).json({
           data: songs90s,
           totalPage: totalPage,
-          total90sSongs: total,
+          totalSongs: total,
           page: page,
           limit: limit,
           status: 200,
@@ -122,7 +122,7 @@ const getAllDetails = async (req, res) => {
         return res.status(200).json({
           data: the2000ssongs,
           totalPage: totalPage,
-          totalthe2000ssongs: total,
+          totalSongs: total,
           page: page,
           limit: limit,
           status: 200,
