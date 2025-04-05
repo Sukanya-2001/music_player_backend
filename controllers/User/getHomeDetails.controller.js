@@ -66,14 +66,14 @@ const getHomeDetails = async (req, res) => {
 
 const getAllDetails = async (req, res) => {
   try {
-    const page = req.query.pages;
-    const limit = req.query.limit;
+    const page = parseInt(req.query.page);
+    const limit = parseInt(req.query.limit);
 
     if (req.params.code === "nrs") {
 
       const total = await Song.countDocuments(); //25
       const totalPage = Math.ceil(total / limit); // 2.5==>3
-      const newReleases = await Song.find()
+      const newReleases = await Song.find().populate("selectArtist selectAlbum")
         .skip((page-1)*limit)
         .limit(limit)
         .sort({ publishYear: -1 });
@@ -94,7 +94,7 @@ const getAllDetails = async (req, res) => {
                 $gt:1990,
                 $lt:2000,      
             }
-        })
+        }).populate("selectArtist selectAlbum")
           .skip((page-1)*limit)
           .limit(limit)
           .sort({ publishYear: -1 });
@@ -114,7 +114,7 @@ const getAllDetails = async (req, res) => {
             publishYear:{
                 $gt:2000      
             }
-        })
+        }).populate("selectArtist selectAlbum")
           .skip((page-1)*limit)
           .limit(limit)
           .sort({ publishYear: -1 });
