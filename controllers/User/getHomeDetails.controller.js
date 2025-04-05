@@ -79,7 +79,7 @@ const getAllDetails = async (req, res) => {
         .sort({ publishYear: -1 });
 
       return res.status(200).json({
-        allNewReleases: newReleases,
+        data: newReleases,
         totalPage: totalPage,
         totalReleaseSongs: total,
         page: page,
@@ -100,7 +100,7 @@ const getAllDetails = async (req, res) => {
           .sort({ publishYear: -1 });
   
         return res.status(200).json({
-          songs90s: songs90s,
+          data: songs90s,
           totalPage: totalPage,
           total90sSongs: total,
           page: page,
@@ -120,7 +120,7 @@ const getAllDetails = async (req, res) => {
           .sort({ publishYear: -1 });
   
         return res.status(200).json({
-          the2000ssongs: the2000ssongs,
+          data: the2000ssongs,
           totalPage: totalPage,
           totalthe2000ssongs: total,
           page: page,
