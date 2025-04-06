@@ -3,42 +3,46 @@ const Song = require("../../schema/song.schema");
 const s3 = require("../../config/s3Bucket");
 
 require("dotenv").config();
-const cloudfronturl="https://d30454c5f9k748.cloudfront.net"
+const cloudfronturl = "https://d30454c5f9k748.cloudfront.net";
 
 const SongCreation = async (req, res) => {
-    try {
-     
-      if (!req.files.image || !req.files.audio) {
-        return res.status(400).json({ message: "Image or audio file is missing" });
-      }
-  
-      const imageUrl = `${cloudfronturl}/${req.files.image[0].location.split(".amazonaws.com/")[1]}`;
-      const audioUrl = `${cloudfronturl}/${req.files.audio[0].location.split(".amazonaws.com/")[1]}`;
-  
-      const newSong = new Song({
-        title: req.body.title,
-        subtitle: req.body.subtitle,
-        publishYear: req.body.publishYear,
-        imageFile: imageUrl,
-        audioFile: audioUrl, // ✅ Save audio URL
-        selectArtist: req.body.selectArtist,
-        selectAlbum: req.body.selectAlbum,
-        songType: req.body.songType,
-        language: req.body.language
-      });
-  
-      const SongDB = await newSong.save();
-  
-      return res.status(200).json({
-        SongDB,
-        message: "Song created successfully!!",
-        status: 201,
-      });
-    } catch (err) {
-      return res.status(500).json({ error: err });
+  try {
+    if (!req.files.image || !req.files.audio) {
+      return res
+        .status(400)
+        .json({ message: "Image or audio file is missing" });
     }
-  };
-  
+
+    const imageUrl = `${cloudfronturl}/${
+      req.files.image[0].location.split(".amazonaws.com/")[1]
+    }`;
+    const audioUrl = `${cloudfronturl}/${
+      req.files.audio[0].location.split(".amazonaws.com/")[1]
+    }`;
+
+    const newSong = new Song({
+      title: req.body.title,
+      subtitle: req.body.subtitle,
+      publishYear: req.body.publishYear,
+      imageFile: imageUrl,
+      audioFile: audioUrl, // ✅ Save audio URL
+      selectArtist: req.body.selectArtist,
+      selectAlbum: req.body.selectAlbum,
+      songType: req.body.songType,
+      language: req.body.language,
+    });
+
+    const SongDB = await newSong.save();
+
+    return res.status(200).json({
+      SongDB,
+      message: "Song created successfully!!",
+      status: 201,
+    });
+  } catch (err) {
+    return res.status(500).json({ error: err });
+  }
+};
 
 const getSongs = async (req, res) => {
   try {
@@ -57,7 +61,8 @@ const getSongs = async (req, res) => {
     const total = await Song.countDocuments(query); //25
     const totalPage = Math.ceil(total / limit); // 2.5==>3
 
-    const songs = await Song.find(query).populate("selectArtist selectAlbum")
+    const songs = await Song.find(query)
+      .populate("selectArtist selectAlbum")
       .skip((page - 1) * limit)
       .limit(limit)
       .sort({ createdAt: -1 });
@@ -132,7 +137,9 @@ const UpdateSongFields = async (req, res) => {
   );
 
   if (req.file) {
-    song.file = `${cloudfronturl}/${req.file.location.split(".amazonaws.com/")[1]}`;
+    song.file = `${cloudfronturl}/${
+      req.file.location.split(".amazonaws.com/")[1]
+    }`;
     const params = {
       Bucket: process.env.AWS_BUCKET_NAME,
       Key: oldImageUrl,
@@ -144,12 +151,38 @@ const UpdateSongFields = async (req, res) => {
   }
 
   if (song) {
-    (song.title = req.body.title),
-      (song.subtitle = req.body.subtitle);
+    (song.title = req.body.title), (song.subtitle = req.body.subtitle);
   }
 
   await song.save();
   res.status(200).json({ message: "Song updated successfully", status: 200 });
+};
+
+const GetSongsOfArtistByID = async (req, res) => {
+  const id = req.params.id;
+  const page=parseInt(req.query.page);
+  const limit=parseInt(req.query.limit);
+
+  
+
+  const totalSongs=await Song.countDocuments({
+    selectArtist: { $in: [id] }
+  });
+
+  const totalPage= Math.ceil(totalSongs/limit);
+
+  const filteredSongs=await Song.find({
+    selectArtist: { $in: [id] }
+  }).skip((page-1)*limit).limit(limit);
+
+  res.status(200).json({
+    filteredSongs,
+    status: 200,
+    totalSongs,
+    totalPage,
+    page,
+    limit
+  });
 };
 
 module.exports = {
@@ -159,4 +192,5 @@ module.exports = {
   getSongInfo,
   UpdateSongStatus,
   UpdateSongFields,
+  GetSongsOfArtistByID,
 };
