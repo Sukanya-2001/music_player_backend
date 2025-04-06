@@ -173,7 +173,7 @@ const GetSongsOfArtistByID = async (req, res) => {
 
   const filteredSongs=await Song.find({
     selectArtist: { $in: [id] }
-  }).skip((page-1)*limit).limit(limit);
+  }).populate("selectArtist").skip((page-1)*limit).limit(limit);
 
   res.status(200).json({
     filteredSongs,
@@ -200,7 +200,7 @@ const GetSongsOfAlbumByID = async (req, res) => {
 
   const filteredSongs=await Song.find({
     selectAlbum: id
-  }).skip((page-1)*limit).limit(limit);
+  }).populate("selectArtist").skip((page-1)*limit).limit(limit);
 
   res.status(200).json({
     filteredSongs,
