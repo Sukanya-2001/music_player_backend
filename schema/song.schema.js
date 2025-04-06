@@ -31,7 +31,7 @@ const SongSchema = new mongoose.Schema({
   selectAlbum:{
     type:mongoose.SchemaTypes.ObjectId,
     ref:"Albums",
-    required:true
+    // required:true
   },
   songType:{
     type:Array,

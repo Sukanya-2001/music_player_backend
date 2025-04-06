@@ -6,7 +6,8 @@ const {
   getSongInfo,
   UpdateSongStatus,
   UpdateSongFields,
-  GetSongsOfArtistByID
+  GetSongsOfArtistByID,
+  GetSongsOfAlbumByID
 } = require("../../controllers/Admin/SongController");
 const upload = require("../../middleware/upload.middleware");
 
@@ -30,5 +31,6 @@ router.put(
   UpdateSongFields
 );
 router.get("/get-songs-of-artist/:id", GetSongsOfArtistByID);
+router.get("/get-songs-of-album/:id", GetSongsOfAlbumByID);
 
 module.exports = router;

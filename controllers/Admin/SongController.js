@@ -185,6 +185,33 @@ const GetSongsOfArtistByID = async (req, res) => {
   });
 };
 
+const GetSongsOfAlbumByID = async (req, res) => {
+  const id = req.params.id;
+  const page=parseInt(req.query.page);
+  const limit=parseInt(req.query.limit);
+
+  
+
+  const totalSongs=await Song.countDocuments({
+    selectAlbum: id
+  });
+
+  const totalPage= Math.ceil(totalSongs/limit);
+
+  const filteredSongs=await Song.find({
+    selectAlbum: id
+  }).skip((page-1)*limit).limit(limit);
+
+  res.status(200).json({
+    filteredSongs,
+    status: 200,
+    totalSongs,
+    totalPage,
+    page,
+    limit
+  });
+};
+
 module.exports = {
   SongCreation,
   getSongs,
@@ -193,4 +220,5 @@ module.exports = {
   UpdateSongStatus,
   UpdateSongFields,
   GetSongsOfArtistByID,
+  GetSongsOfAlbumByID
 };

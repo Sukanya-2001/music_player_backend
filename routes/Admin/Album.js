@@ -18,4 +18,5 @@ router.get("/get-album-info/:id",getAlbumInfo);
 router.put("/album-status-update/:id",UpdateAlbumStatus);
 router.put("/album-field-update/:id",upload("albums").single("image"), UpdateAlbumFields);
 
+
 module.exports = router;
