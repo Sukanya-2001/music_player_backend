@@ -24,7 +24,6 @@ const wishlistSchema = new mongoose.Schema(
 
     album: {
       type: mongoose.SchemaTypes.ObjectId,
-      required: true,
       ref: "Albums",
     },
   },

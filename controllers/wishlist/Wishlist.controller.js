@@ -14,7 +14,7 @@ const FavouriteController = async (req, res) => {
         user: req.id,
         song: req.body.song_id,
         artist: req.body.artist_id,
-        album: req.body.album_id,
+        album: req.body.album_id || null,
       });
 
       const song = await wishList.save();
