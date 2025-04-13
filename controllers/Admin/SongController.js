@@ -160,20 +160,21 @@ const UpdateSongFields = async (req, res) => {
 
 const GetSongsOfArtistByID = async (req, res) => {
   const id = req.params.id;
-  const page=parseInt(req.query.page);
-  const limit=parseInt(req.query.limit);
+  const page = parseInt(req.query.page);
+  const limit = parseInt(req.query.limit);
 
-  
-
-  const totalSongs=await Song.countDocuments({
-    selectArtist: { $in: [id] }
+  const totalSongs = await Song.countDocuments({
+    selectArtist: { $in: [id] },
   });
 
-  const totalPage= Math.ceil(totalSongs/limit);
+  const totalPage = Math.ceil(totalSongs / limit);
 
-  const filteredSongs=await Song.find({
-    selectArtist: { $in: [id] }
-  }).populate("selectArtist").skip((page-1)*limit).limit(limit);
+  const filteredSongs = await Song.find({
+    selectArtist: { $in: [id] },
+  })
+    .populate("selectArtist")
+    .skip((page - 1) * limit)
+    .limit(limit);
 
   res.status(200).json({
     filteredSongs,
@@ -181,26 +182,27 @@ const GetSongsOfArtistByID = async (req, res) => {
     totalSongs,
     totalPage,
     page,
-    limit
+    limit,
   });
 };
 
 const GetSongsOfAlbumByID = async (req, res) => {
   const id = req.params.id;
-  const page=parseInt(req.query.page);
-  const limit=parseInt(req.query.limit);
+  const page = parseInt(req.query.page);
+  const limit = parseInt(req.query.limit);
 
-  
-
-  const totalSongs=await Song.countDocuments({
-    selectAlbum: id
+  const totalSongs = await Song.countDocuments({
+    selectAlbum: id,
   });
 
-  const totalPage= Math.ceil(totalSongs/limit);
+  const totalPage = Math.ceil(totalSongs / limit);
 
-  const filteredSongs=await Song.find({
-    selectAlbum: id
-  }).populate("selectArtist").skip((page-1)*limit).limit(limit);
+  const filteredSongs = await Song.find({
+    selectAlbum: id,
+  })
+    .populate("selectArtist")
+    .skip((page - 1) * limit)
+    .limit(limit);
 
   res.status(200).json({
     filteredSongs,
@@ -208,8 +210,77 @@ const GetSongsOfAlbumByID = async (req, res) => {
     totalSongs,
     totalPage,
     page,
-    limit
+    limit,
   });
+};
+
+const GetDiscoveredGenres = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+
+    const songs = await Song.find({ status: "active" });
+
+    // Group songs by songType (genre)
+    const genreMap = {};
+
+    songs.forEach((song) => {
+      if (Array.isArray(song.songType)) {
+        song.songType.forEach((genre) => {
+          if (!genreMap[genre]) {
+            genreMap[genre] = [];
+          }
+          genreMap[genre].push(song);
+        });
+      }
+    });
+
+    // Convert genreMap to array format
+    const genreArray = Object.entries(genreMap).map(([genre, songs]) => ({
+      genre,
+      songs,
+    }));
+
+    const totalGenres = genreArray.length;
+    const startIndex = (page - 1) * limit;
+    const paginatedGenres = genreArray.slice(startIndex, startIndex + limit);
+    const totalPage=Math.ceil(totalGenres/limit);
+
+    res.status(200).json({
+      data: paginatedGenres,
+      status:200,
+      page,
+      limit,
+      totalGenres,
+      totalPage
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+const GetGenresSongs = async (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 1;
+
+  const total = await Song.countDocuments({ songType: req.params.genre });
+  const totalPage= Math.ceil(total/limit);
+  console.log(total);
+
+  const songs = await Song.find({ songType: req.params.genre })
+    .skip((page - 1) * limit)
+    .limit(limit).sort({createdAt:-1});
+
+  res.status(200).json({
+    status:200,
+    songs,
+    page,
+    limit,
+    total,
+    totalPage
+  })    
+
 };
 
 module.exports = {
@@ -220,5 +291,7 @@ module.exports = {
   UpdateSongStatus,
   UpdateSongFields,
   GetSongsOfArtistByID,
-  GetSongsOfAlbumByID
+  GetSongsOfAlbumByID,
+  GetDiscoveredGenres,
+  GetGenresSongs,
 };
