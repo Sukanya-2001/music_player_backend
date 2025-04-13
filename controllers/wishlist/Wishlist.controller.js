@@ -26,7 +26,7 @@ const FavouriteController = async (req, res) => {
         song: req.body.song_id,
       });
 
-      res.status(200).json({ json: "Wishlist removed" });
+      res.status(200).json({ json: "Wishlist removed",status: 200 });
     }
   } catch (err) {
     console.log(err);
