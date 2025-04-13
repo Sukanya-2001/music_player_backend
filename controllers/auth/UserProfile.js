@@ -2,7 +2,7 @@ const User = require("../../schema/userRegister.schema");
 
 const UserProfile = async (req, res) => {
   try {
-    const result = await User.findById(req.id);
+    const result = await User.findById(req.id).select("-password -__v");
 
     res.status(200).json({
       result,
