@@ -8,7 +8,7 @@ const getAuthenticated = require("../../middleware/getAuthenticated.middleware.j
 
 const router = express.Router();
 
-router.get("/get-home-details", getAuthenticated, getHomeDetails);
+router.get("/get-home-details", getHomeDetails);
 router.get("/get-all-details/:code", getAllDetails);
 router.get("/more-songs",getDiffLangSongs);
 
