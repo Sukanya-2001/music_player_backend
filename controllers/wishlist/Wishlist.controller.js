@@ -35,8 +35,8 @@ const FavouriteController = async (req, res) => {
 
 const getFavouritesController = async (req, res) => {
   try {
-    const page = parseInt(req.body.page) || 1;
-    const limit = parseInt(req.body.limit) || 1;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 1;
 
     const total = await WishList.countDocuments();
     const totalPage = Math.ceil(total / limit);
@@ -47,7 +47,7 @@ const getFavouritesController = async (req, res) => {
       .skip((page - 1) * limit)
       .limit(limit)
       .sort({ createdAt: -1 });
-
+ 
     res
       .status(200)
       .json({ wishList: wishList, total, totalPage, limit, page, status: 200 });
