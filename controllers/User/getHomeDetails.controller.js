@@ -14,9 +14,11 @@ const getHomeDetails = async (req, res) => {
     const newReleases = await Song.find()
       .limit(5)
       .sort({ publishYear: -1 });
-    const limitedArtists = await Artist.find()
+      
+    const limitedArtists = await Artist.find() 
       .limit(5)
       .sort({ createdAt: -1 });
+
     const limitedAlbums = await Albums.find()
       .limit(8)
       .sort({ createdAt: -1 });
@@ -140,9 +142,9 @@ const getAllDetails = async (req, res) => {
 
 const getDiffLangSongs=async (req,res) =>{
     
-    const bengaliSongs=await Song.find({language:"bengali"}).limit(5);
-    const hindiSongs=await Song.find({language:"hindi"}).limit(5);
-    const EnglishSongs=await Song.find({language:"english"}).limit(5);
+    const bengaliSongs=await Song.find({language:"bengali"}).limit(6);
+    const hindiSongs=await Song.find({language:"hindi"}).limit(6);
+    const EnglishSongs=await Song.find({language:"english"}).limit(6);
 
     res.status(200).json({
         bengaliSongs,

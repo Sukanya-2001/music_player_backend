@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const cookieParser=require('cookie-parser');
 const connectdb = require("./connection/connectdb");
 const redisClient = require("./connection/redisdb");
 const auth = require("./routes/auth");
@@ -7,9 +8,11 @@ const artist = require("./routes/Admin/Artist");
 const album = require("./routes/Admin/Album");
 const song = require("./routes/Admin/Song");
 const home = require("./routes/User/Home");
+const WishList = require("./routes/User/WishList");
 const app = express();
 const resetpassword=require("./routes/resetpassword")
 
+app.use(cookieParser());
 app.use(express.json());
 connectdb();
 
@@ -46,6 +49,8 @@ app.use("/admin/song",song);
 //homepage
 
 app.use("/user/home",home);
+
+app.use("/user/wishlist",WishList);
 
 app.get("/", (req, res) => {
   res.send("working...");
