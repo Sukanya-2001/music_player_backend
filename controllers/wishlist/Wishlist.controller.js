@@ -42,10 +42,8 @@ const getFavouritesController = async (req, res) => {
     const totalPage = Math.ceil(total / limit);
 
     const wishList = await WishList.find({ user: req.params.id })
-      .populate("user")
       .populate("song")
       .populate("artist")
-      .populate("album")
       .skip((page - 1) * limit)
       .limit(limit)
       .sort({ createdAt: -1 });

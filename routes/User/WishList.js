@@ -12,4 +12,4 @@ router.post("/add-favourite", getAuthenticated, FavouriteController);
 router.get("/get-favourite/:id", getAuthenticated, getFavouritesController);
 router.get("/get-ids", getAuthenticated, getIds);
 
-module.exports = router;  
+module.exports = router;   
