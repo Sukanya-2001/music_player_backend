@@ -25,6 +25,7 @@ app.use(
       "https://musicplayer-frontend.vercel.app",
       "http://localhost:3000",
       "http://localhost:14016",
+      "http://localhost:5173",
     ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,

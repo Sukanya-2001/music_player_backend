@@ -5,6 +5,6 @@ const {
 
 const router = express.Router();
 
-router.get("/create-checkout-session", createCheckoutSession);
+router.post("/create-checkout-session", createCheckoutSession);
 
 module.exports = router;
