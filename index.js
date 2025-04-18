@@ -9,6 +9,8 @@ const album = require("./routes/Admin/Album");
 const song = require("./routes/Admin/Song");
 const home = require("./routes/User/Home");
 const WishList = require("./routes/User/WishList");
+const payment = require("./routes/payment");
+const webhooks = require("./routes/webhooks.route.js");
 const app = express();
 const resetpassword=require("./routes/resetpassword")
 
@@ -51,6 +53,10 @@ app.use("/admin/song",song);
 app.use("/user/home",home);
 
 app.use("/user/wishlist",WishList);
+
+app.use("/payment",payment);
+
+app.use("/webhooks",webhooks);
 
 app.get("/", (req, res) => {
   res.send("working...");
