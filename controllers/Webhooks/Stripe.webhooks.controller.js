@@ -52,7 +52,9 @@ exports.handleWebhook = async (req, res) => {
 async function handleCheckoutSessionCompleted(session) {
   console.log(session);
 
-  const subscription=await stripe.subscriptions.retrieve(session.subscription);
+  const subscription=await stripe.subscriptions.retrieve(session.subscription,{
+    expand:['latest_invoice']
+  });
 
   console.log(subscription);
 
