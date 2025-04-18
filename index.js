@@ -15,7 +15,7 @@ const app = express();
 const resetpassword=require("./routes/resetpassword")
 
 app.use(cookieParser());
-app.use(express.json());
+
 connectdb();
 
 app.use(
@@ -62,6 +62,8 @@ app.use("/webhooks",webhooks);
 app.get("/", (req, res) => {
   res.send("working...");
 });
+
+app.use(express.json());
 
 app.listen(3001, () => {
   console.log(`app is listening on 3001`);
