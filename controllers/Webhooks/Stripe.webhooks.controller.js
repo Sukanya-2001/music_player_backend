@@ -50,16 +50,23 @@ exports.handleWebhook = async (req, res) => {
 };
 
 async function handleCheckoutSessionCompleted(session) {
-  console.log(session);
+  console.log("handleCheckoutSession",session);
 
   const subscription=await stripe.subscriptions.retrieve(session.subscription,{
     expand:['latest_invoice']
   });
 
-  console.log(subscription);
-
   const invoice=await stripe.invoices.retrieve(subscription.latest_invoice);
 
   console.log(invoice.hosted_invoice_url); 
+
+}
+
+
+async function handleInvoicePaymentSucceeded(invoice){
+
+    console.log("handleInvoicePaymentSucceeded",invoice);
+
+
 
 }
