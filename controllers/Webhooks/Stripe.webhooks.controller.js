@@ -56,7 +56,7 @@ async function handleCheckoutSessionCompleted(session) {
     expand:['latest_invoice']
   });
 
-  const invoice=await stripe.invoices.retrieve(subscription.latest_invoice);
+  const invoice=subscription.latest_invoice;
 
   console.log(invoice.hosted_invoice_url); 
 
