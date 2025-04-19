@@ -31,7 +31,7 @@ exports.createCheckoutSession = async (req, res) => {
 exports.cancelTrialPlan = async (req, res) => {
   try {
     const subscription = await subscriptionDetailsSchema.findById(
-      "6803ee9fca3abce60cf351eb"
+      "6803fac4ca3abce60cf35201"
     );
 
     const cancelTrialPlan = await stripe.subscriptions.cancel(
@@ -45,41 +45,26 @@ exports.cancelTrialPlan = async (req, res) => {
 };
 
 exports.Refund = async (req, res) => {
-    try {
-      // Get the subscription
-      const subscription = await subscriptionDetailsSchema.findById(
-        "6803ee9fca3abce60cf351eb"
-      );
-  
-      // Retrieve the subscription details from Stripe
-      const subscriptionDetails = await stripe.subscriptions.retrieve(
-        subscription.subscriptionId
-      );
-  
-      console.log(subscriptionDetails.latest_invoice);
-  
-      // Retrieve the latest invoice
-      const invoice = await stripe.invoices.retrieve(subscriptionDetails.latest_invoice);
-  
+  try {
+    // const invoices = await stripe.invoices.list({
+    //   subscription: "sub_1RFhlyFqhCKNvicTk2cuuL37",
+    //   limit: 1, // get the most recent invoice
+    // });
+    // const invoice = invoices.data[0];
 
-      console.log("65",invoice);
-      // Access the charge ID from the invoice
-      const chargeId = invoice.charge;
-  
-      // Create a refund
-      const refund = await stripe.refunds.create({
-        charge: chargeId,
-        amount: 1000,  // Refund amount in cents (this is for $10)
+    // const paymentIntentId = invoice.payment_intent;
+    // if (!paymentIntentId) {
+    //   throw new Error("Invoice has no payment_intent – nothing to refund.");
+    // }
+
+    const refund = await stripe.refunds.create({
+        payment_intent: "pi_3RFhIwFqhCKNvicT0A8pTQWd",
+        // amount: 500,         // optional: refund a partial amount (in cents)
       });
-  
-      console.log(refund);
-  
-      // Respond with the refund details
-      res.status(200).send(refund);
-  
-    } catch (error) {
-      console.error("Error processing refund: ", error);
-      res.status(500).send({ error: error.message });
-    }
-  };
-  
+      console.log('Refund issued:', refund.id);
+      
+  } catch (error) {
+    console.error("Error processing refund: ", error);
+    res.status(500).send({ error: error.message });
+  }
+};
