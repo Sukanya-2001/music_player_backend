@@ -38,6 +38,10 @@ exports.handleWebhook = async (req, res) => {
       case "invoice.payment_failed":
         await handleInvoicePaymentFailed(event.data.object);
         break;
+       
+        case "payment_intent.succeeded":
+          await handlePaymentIntentSucceeded(event.data.object);
+          break;  
       // Add more event types as needed
       default:
         console.log(`Unhandled event type ${event.type}`);
@@ -95,4 +99,9 @@ async function handleCheckoutSessionCompleted(session) {
 
 async function handleInvoicePaymentSucceeded(invoice) {
   console.log("handleInvoicePaymentSucceeded", invoice);
+}
+
+
+async function handlePaymentIntentSucceeded(intent){
+  console.log("handlePaymentIntentSucceeded", intent);
 }

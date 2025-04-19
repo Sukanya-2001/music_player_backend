@@ -46,22 +46,21 @@ exports.cancelTrialPlan = async (req, res) => {
 
 exports.Refund = async (req, res) => {
   try {
-    // const invoices = await stripe.invoices.list({
-    //   subscription: "sub_1RFhlyFqhCKNvicTk2cuuL37",
-    //   limit: 1, // get the most recent invoice
-    // });
-    // const invoice = invoices.data[0];
 
-    // const paymentIntentId = invoice.payment_intent;
-    // if (!paymentIntentId) {
-    //   throw new Error("Invoice has no payment_intent – nothing to refund.");
-    // }
+    const subscription=await stripe.subscriptions.retrieve("sub_1RFhkeFqhCKNvicTXwY4D57R");
+    console.log("subscription",subscription);
 
-    const refund = await stripe.refunds.create({
-        payment_intent: "pi_3RFhIwFqhCKNvicT0A8pTQWd",
-        // amount: 500,         // optional: refund a partial amount (in cents)
-      });
-      console.log('Refund issued:', refund.id);
+    const invoice = await stripe.invoices.retrieve(subscription.latest_invoice,{ expand: ["payment_intent"] });
+
+    console.log("invoice",invoice);
+
+   
+
+    // const refund = await stripe.refunds.create({
+    //     // payment_intent: paymentIntentId,
+    //     // amount: 500,         // optional: refund a partial amount (in cents)
+    //   });
+    //   console.log('Refund issued:', refund.id);
       
   } catch (error) {
     console.error("Error processing refund: ", error);
