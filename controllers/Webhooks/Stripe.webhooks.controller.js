@@ -65,6 +65,9 @@ async function handleCheckoutSessionCompleted(session) {
       email: session.customer_details.email,
       limit: 1,
     });
+
+    console.log("69",session.customer_details.email);
+    console.log("70",existingCustomer);
   
     if (!existingCustomer.data.length) {
       const customer = await stripe.customers.create({
