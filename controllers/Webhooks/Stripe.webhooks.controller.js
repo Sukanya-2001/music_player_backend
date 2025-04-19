@@ -1,4 +1,4 @@
-const subscriptionDetailsSchema = require("../../schema/subscriptionDetails.schema");
+const SubscriptionDetails = require("../../schema/subscriptionDetails.schema");
 
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
@@ -66,13 +66,15 @@ async function handleCheckoutSessionCompleted(session) {
       limit: 1,
     });
 
-    if (!existingCustomer.data.length) {
+    console.log(existingCustomer);
+
+    if (existingCustomer.data.length>0) {
       const customer = await stripe.customers.create({
         email: session.customer_details.email,
         name: session.customer_details.name,
       });
   
-      await subscriptionDetailsSchema.create({
+      await SubscriptionDetails.create({
         customerId: session.customer,
         subscriptionId: session.subscription,
         invoice: invoice.id,
