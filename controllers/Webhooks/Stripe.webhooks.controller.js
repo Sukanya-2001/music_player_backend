@@ -1,3 +1,5 @@
+const subscriptionDetailsSchema = require("../../schema/subscriptionDetails.schema");
+
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 exports.handleWebhook = async (req, res) => {
@@ -50,23 +52,43 @@ exports.handleWebhook = async (req, res) => {
 };
 
 async function handleCheckoutSessionCompleted(session) {
-  console.log("handleCheckoutSession",session);
-
-  const subscription=await stripe.subscriptions.retrieve(session.subscription,{
-    expand:['latest_invoice']
-  });
-
-  const invoice=subscription.latest_invoice;
-
-  console.log(invoice.hosted_invoice_url); 
-
+    console.log("handleCheckoutSession", session);
+  
+    const subscription = await stripe.subscriptions.retrieve(session.subscription, {
+      expand: ["latest_invoice"],
+    });
+  
+    const invoice = subscription.latest_invoice;
+    console.log(invoice.hosted_invoice_url);
+  
+    const existingCustomer = await stripe.customers.list({
+      email: session.customer_details.email,
+      limit: 1,
+    });
+  
+    if (!existingCustomer.data.length) {
+      const customer = await stripe.customers.create({
+        email: session.customer_details.email,
+        name: session.customer_details.name,
+      });
+  
+      await subscriptionDetailsSchema.create({
+        customerId: session.customer,
+        subscriptionId: session.subscription,
+        invoice: invoice.id,
+        amount_subtotal: session.amount_subtotal,
+        email: session.customer_details.email,
+        name: session.customer_details.name,
+        priceId: subscription.items.data[0].price.id,
+      });
+  
+      console.log("New customer created:", customer);
+    } else {
+      console.log("Existing customer:", existingCustomer.data[0]);
+    }
 }
+  
 
-
-async function handleInvoicePaymentSucceeded(invoice){
-
-    console.log("handleInvoicePaymentSucceeded",invoice);
-
-
-
+async function handleInvoicePaymentSucceeded(invoice) {
+  console.log("handleInvoicePaymentSucceeded", invoice);
 }
