@@ -4,7 +4,7 @@ const Song = require("../../schema/song.schema");
 
 const getHomeDetails = async (req, res) => {
   try {
-    const limit = parseInt(5);
+    const limit = parseInt(6);
 
     const songs = await Song.find()
       .populate("selectArtist selectAlbum")
@@ -43,13 +43,13 @@ const getHomeDetails = async (req, res) => {
         $gte: 1990,
         $lt: 2000,
       },
-    }).limit(5);
+    }).limit(6);
 
     const the2000ssongs = await Song.find({
       publishYear: {
         $gte: 2000,
       },
-    }).limit(5);
+    }).limit(6);
 
     return res.status(200).json({
       Allsongs: songs,
