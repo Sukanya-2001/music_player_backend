@@ -47,20 +47,13 @@ exports.cancelTrialPlan = async (req, res) => {
 exports.Refund = async (req, res) => {
   try {
 
-    const subscription=await stripe.subscriptions.retrieve("sub_1RFhkeFqhCKNvicTXwY4D57R");
-    console.log("subscription",subscription);
-
-    const invoice = await stripe.invoices.retrieve(subscription.latest_invoice,{ expand: ["payment_intent"] });
-
-    console.log("invoice",invoice);
-
    
 
-    // const refund = await stripe.refunds.create({
-    //     // payment_intent: paymentIntentId,
-    //     // amount: 500,         // optional: refund a partial amount (in cents)
-    //   });
-    //   console.log('Refund issued:', refund.id);
+    const refund = await stripe.refunds.create({
+        payment_intent: "pi_3RFiAMFqhCKNvicT0gP1OUD6",
+        amount: 1000,         // optional: refund a partial amount (in cents)
+      });
+      console.log('Refund issued:', refund.id);
       
   } catch (error) {
     console.error("Error processing refund: ", error);

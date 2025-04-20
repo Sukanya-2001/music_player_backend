@@ -42,7 +42,7 @@ app.use("/user", auth);
 
 //artist
 app.use("/admin/artist",artist);
-
+ 
 //album
 app.use("/admin/album", album);
 
