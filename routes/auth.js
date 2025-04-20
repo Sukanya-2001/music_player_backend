@@ -3,7 +3,8 @@ const { UserRegister } = require("../controllers/auth/UserRegister");
 const { UserLogin } = require("../controllers/auth/UserLogin");
 const { UserProfile } = require("../controllers/auth/UserProfile");
 const { songUpload } = require("../controllers/auth/SongUpload");
-const { ExploreSongs } = require("../controllers/auth/ExploreSongs");
+const { ExploreSongs } = require("../controllers/auth/ExploreSongs"); 
+const { ExploreSongsById } = require("../controllers/auth/ExploreSongsById");
 const getAuthenticated = require("../middleware/getAuthenticated.middleware");
 const upload = require("../middleware/upload.middleware");
 
@@ -18,5 +19,6 @@ router.post("/add-song", getAuthenticated, upload("user").fields([
 ]),songUpload);
 
 router.get("/explore-songs",ExploreSongs);
+router.get("/explore-songs/:userId",ExploreSongsById);
 
 module.exports = router; 
