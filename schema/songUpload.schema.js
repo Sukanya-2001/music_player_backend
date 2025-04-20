@@ -28,4 +28,4 @@ const SongUploadSchema = new mongoose.Schema({
   timestamps:true
 });
 
-module.exports = mongoose.model("SongUploadSchemas", SongUploadSchema);
+module.exports = mongoose.model("SongUploads", SongUploadSchema);
