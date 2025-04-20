@@ -32,6 +32,16 @@ app.use(
   })
 );
 
+
+
+app.use("/webhooks",webhooks);
+
+app.get("/", (req, res) => {
+  res.send("working...");
+});
+
+app.use(express.json());
+
 //common for both
 app.use("/reset",resetpassword);
 
@@ -56,14 +66,6 @@ app.use("/user/home",home);
 app.use("/user/wishlist",WishList);
 
 app.use("/payment",payment);
-
-app.use("/webhooks",webhooks);
-
-app.get("/", (req, res) => {
-  res.send("working...");
-});
-
-app.use(express.json());
 
 app.listen(3001, () => {
   console.log(`app is listening on 3001`);

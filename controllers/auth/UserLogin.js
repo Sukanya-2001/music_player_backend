@@ -9,11 +9,16 @@ const UserLogin = async (req, res) => {
 
     if (result) {
        
+      console.log(req.body.password);
+
       const is_same = is_match(
         req.body.password,
         result.password[1],
         result.password[0]
       );
+
+      console.log(is_same); 
+
       if (is_same) {
         const accessToken = jwt.sign(
           { email: req.body.email, role: result.role },
@@ -45,7 +50,8 @@ const UserLogin = async (req, res) => {
       return res.status(200).json({ message: "User not found",status:400 });
     }
   } catch (err) {
-    res.status(500).json({message:err})
+    console.log(err);
+    return res.status(500).json({message:err})
   }
 };
 

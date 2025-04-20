@@ -9,7 +9,7 @@ const upload = require("../middleware/upload.middleware");
 
 const router = express.Router();
 
-router.post("/register", UserRegister);
+router.post("/register", UserRegister); 
 router.post("/login", UserLogin);
 router.get("/profile", getAuthenticated, UserProfile);
 router.post("/add-song", getAuthenticated, upload("user").fields([
