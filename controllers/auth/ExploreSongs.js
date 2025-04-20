@@ -9,7 +9,7 @@ const ExploreSongs = async (req, res) => {
     const totalPage = Math.ceil(totalSongs / limit);
 
     const exploreSongs = await songUploadSchema
-      .find()
+      .find().populate("userId")
       .skip((page - 1) * limit)
       .limit(limit);
 
