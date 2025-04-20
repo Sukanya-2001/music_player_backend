@@ -12,11 +12,11 @@ const getHomeDetails = async (req, res) => {
       .sort({ createdAt: -1 });
 
     const newReleases = await Song.find()
-      .limit(5)
+      .limit(6)
       .sort({ publishYear: -1 });
       
     const limitedArtists = await Artist.find() 
-      .limit(5)
+      .limit(6)
       .sort({ createdAt: -1 });
 
     const limitedAlbums = await Albums.find()
