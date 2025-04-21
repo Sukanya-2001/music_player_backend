@@ -103,7 +103,7 @@ async function handleSubscriptionUpdated(subscription) {
   console.log("subscription", subscription);
 
   let currentPeriodEnd;
-  let interval='month';
+  let interval='year';
 
   if (interval === "month") {
     currentPeriodEnd = new Date(); 
