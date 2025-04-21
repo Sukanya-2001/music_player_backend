@@ -38,10 +38,10 @@ exports.handleWebhook = async (req, res) => {
       case "invoice.payment_failed":
         await handleInvoicePaymentFailed(event.data.object);
         break;
-       
-        case "payment_intent.succeeded":
-          await handlePaymentIntentSucceeded(event.data.object);
-          break;  
+
+      case "payment_intent.succeeded":
+        await handlePaymentIntentSucceeded(event.data.object);
+        break;
       // Add more event types as needed
       default:
         console.log(`Unhandled event type ${event.type}`);
@@ -56,57 +56,70 @@ exports.handleWebhook = async (req, res) => {
 };
 
 async function handleCheckoutSessionCompleted(session) {
-    console.log("handleCheckoutSession", session);
-  
-    const subscription = await stripe.subscriptions.retrieve(session.subscription, {
+  console.log("handleCheckoutSession", session);
+
+  const subscription = await stripe.subscriptions.retrieve(
+    session.subscription,
+    {
       expand: ["latest_invoice"],
-    });
-
-    console.log(subscription);
-  
-    const invoice = subscription.latest_invoice;
-    // console.log(invoice.hosted_invoice_url);
-  
-    const existingCustomer = await stripe.customers.list({
-      email: session.customer_details.email,
-      limit: 1,
-    });
-
-    console.log(existingCustomer);
-
-    if (existingCustomer.data.length===0) {
-      const customer = await stripe.customers.create({
-        email: session.customer_details.email,
-        name: session.customer_details.name,
-      });
-  
-      await SubscriptionDetails.create({
-        customerId: session.customer,
-        subscriptionId: session.subscription,
-        invoice: invoice.id,
-        amount_subtotal: session.amount_subtotal,
-        email: session.customer_details.email,
-        name: session.customer_details.name,
-        priceId: subscription.items.data[0].price.id,
-      });
-  
-      console.log("New customer created:", customer);
-    } else {
-      console.log("Existing customer:", existingCustomer.data[0]);
     }
+  );
+
+  console.log(subscription);
+
+  const invoice = subscription.latest_invoice;
+  // console.log(invoice.hosted_invoice_url);
+
+  const existingCustomer = await stripe.customers.list({
+    email: session.customer_details.email,
+    limit: 1,
+  });
+
+  console.log(existingCustomer);
+
+  if (existingCustomer.data.length === 0) {
+    const customer = await stripe.customers.create({
+      email: session.customer_details.email,
+      name: session.customer_details.name,
+    });
+
+    await SubscriptionDetails.create({
+      customerId: session.customer,
+      subscriptionId: session.subscription,
+      invoice: invoice.id,
+      amount_subtotal: session.amount_subtotal,
+      email: session.customer_details.email,
+      name: session.customer_details.name,
+      priceId: subscription.items.data[0].price.id,
+    });
+
+    console.log("New customer created:", customer);
+  } else {
+    console.log("Existing customer:", existingCustomer.data[0]);
+  }
 }
-  
 
-async function handleSubscriptionUpdated(subscription){
+async function handleSubscriptionUpdated(subscription) {
+  console.log("subscription", subscription);
 
-  console.log("subscription",subscription);
+  let currentPeriodEnd;
+  let interval='month';
+
+  if (interval === "month") {
+    currentPeriodEnd = new Date(); 
+    currentPeriodEnd.setMonth(currentPeriodEnd.getMonth() + 1);
+  } else if (interval === "year") {
+    currentPeriodEnd = new Date();
+    currentPeriodEnd.setFullYear(currentPeriodEnd.getFullYear() + 1);
+  }
+
+  console.log("currentPeriodEnd", currentPeriodEnd);
 
 }
 async function handleInvoicePaymentSucceeded(invoice) {
   console.log("handleInvoicePaymentSucceeded", invoice);
 }
 
-
-async function handlePaymentIntentSucceeded(intent){
+async function handlePaymentIntentSucceeded(intent) {
   console.log("handlePaymentIntentSucceeded", intent);
 }

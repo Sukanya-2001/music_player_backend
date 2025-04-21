@@ -64,6 +64,8 @@ exports.updatePlan = async (req, res) => {
     console.log(finalizedInvoice);
     console.log(finalizedInvoice.hosted_invoice_url);
 
+    
+
     res.status(200).json({
       status: true,
       message: "Subscription plan updated with proration",
