@@ -99,7 +99,7 @@ async function handleCheckoutSessionCompleted(session) {
 
 async function handleSubscriptionUpdated(subscription){
 
-  console.log(subscription);
+  console.log("subscription",subscription);
 
 }
 async function handleInvoicePaymentSucceeded(invoice) {

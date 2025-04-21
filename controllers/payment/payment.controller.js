@@ -31,13 +31,6 @@ exports.createCheckoutSession = async (req, res) => {
 exports.updatePlan = async (req, res) => {
   try {
     // Find the user
-    const user = await userModel.findOne({ email });
-    if (!user || !user.stripeCustomerId) {
-      return res.status(404).json({
-        status: false,
-        message: "User not found or no Stripe customer ID",
-      });
-    }
     // Update the subscription
     const updatedSubscription = await stripe.subscriptions.update(
       "sub_1RFi6jFqhCKNvicTteq7BF5p",
