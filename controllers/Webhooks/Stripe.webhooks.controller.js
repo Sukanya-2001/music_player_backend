@@ -97,6 +97,11 @@ async function handleCheckoutSessionCompleted(session) {
 }
   
 
+async function handleSubscriptionUpdated(subscription){
+
+  console.log(subscription);
+
+}
 async function handleInvoicePaymentSucceeded(invoice) {
   console.log("handleInvoicePaymentSucceeded", invoice);
 }

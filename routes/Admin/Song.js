@@ -37,4 +37,4 @@ router.get("/get-songs-of-album/:id", GetSongsOfAlbumByID);
 router.get("/get-discover-genres", GetDiscoveredGenres);
 router.get("/get-genres-songs/:genre", GetGenresSongs);
 
-module.exports = router;
+module.exports = router; 
